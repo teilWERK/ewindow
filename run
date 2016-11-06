@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # To be called from /etc/service/ewindow/run
 # Stuff to execute on boot by root user
 

@@ -15,10 +15,10 @@ case $CHOICE in
 		;;
 	Preview*)
 		echo localhost > service/send/host
-		svc -d -u send
-		svc -u recv
+		svc -d -u service/send
+		svc -u service/recv
 		dialog --msgbox "Started Camera Preview..." 20 100
-		svc -d recv
+		svc -d service/recv
 		;;
 	Call*)
 		ssh 10.7.7.93 CALL
