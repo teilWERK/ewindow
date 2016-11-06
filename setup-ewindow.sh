@@ -3,8 +3,8 @@ ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.w
 
 # Replace pi with ewindow user
 
-useradd -G video -s /home/ewindow/ewindow.sh ewindow
-sudo git clone https://github.com/strfry/estreamer /home/ewindow
+useradd -G video,audio -s /home/ewindow/login.sh ewindow
+sudo git clone https://github.com/strfry/ewindow /home/ewindow
 sudo chown -R ewindow:ewindow /home/ewindow/
 
 

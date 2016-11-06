@@ -29,5 +29,7 @@ if [ -n "$SSH_CLIENT" ]; then
       exit 1
       ;;
   esac
+else
+  exec ./menu.sh
 fi
 
