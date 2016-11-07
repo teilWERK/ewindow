@@ -10,7 +10,11 @@ sudo git clone https://github.com/strfry/ewindow /home/ewindow
 sudo chown -R ewindow:ewindow /home/ewindow/
 
 
-# sudo apt-get install stuff
-# dialog (or use whiptail??)
-# daemontools
-# daemontools-run
+sudo apt-get update
+sudo apt-get install -y \
+	git \
+	dialog \
+	daemontools-run \
+	gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
+
+sudo ln -s /home/ewindow /etc/service/
