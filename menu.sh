@@ -18,7 +18,7 @@ case $CHOICE in
 		svc -d -u service/send
 		svc -u service/recv
 		dialog --msgbox "Started Camera Preview..." 20 100
-		svc -d service/recv
+		svc -d service/recv service/send
 		;;
 	Call*)
 		ssh 10.7.7.93 CALL
