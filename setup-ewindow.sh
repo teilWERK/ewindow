@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh
 
 systemctl set-default multi-user.target
 ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
@@ -16,6 +16,7 @@ sudo apt-get install -y \
 	git \
 	dialog \
 	daemontools-run \
-	gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
+	gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+	gstreamer1.0-omx
 
 sudo ln -s /home/ewindow /etc/service/
