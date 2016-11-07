@@ -3,8 +3,12 @@
 # To be called from /etc/service/ewindow/run
 # Stuff to execute on boot by root user
 
+# Prepare TAP device to run peervpn as user
 ip tuntap add dev ewindow0 mode tap user ewindow
-ifconfig peervpn0 $(cat /home/ewindow/config/ip)/24
+ifconfig ewindow0 $(cat /home/ewindow/config/ip)/24
+
+# Disable screen blanking
+sh -c "TERM=linux setterm -blank 0 >/dev/tty0"
 
 sudo -u ewindow svscan  /home/ewindow/service
 
