@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/sh -ex
 
 systemctl set-default multi-user.target
 ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin@.service
 
 # Replace pi with ewindow user
 
