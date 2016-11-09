@@ -1,11 +1,12 @@
 #!/bin/bash -ex
 
+DIALOG=whiptail
+
 mkdir -p config
 
 CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	20 100 10 \
-	"IP" "Enter IP Address Number" \
-	"Hostname" "" \
+	"ID" "Enter E-Window Number" \
 	"Description" "Change long description of this EWindow instance" \
 	"WiFi" "Enter Network Configuration" \
 	"Update" "Pull the newest version of this Software" \
@@ -34,9 +35,19 @@ function do_wifi() {
   # TODO: Write it somewhere relevant
 }
 
+function do_id() {
+  $DIALOG --inputbox "Enter your assigned E-Window number" 10 40 $(cat config/id) 2>config/id
+  ID=$(cat config/id)
+  IP=10.7.7.$ID
+  echo $IP > config/ip
+}
+
 case $CHOICE in
   WiFi)
     do_wifi
+    ;;
+  ID)
+    do_id
     ;;
   Update)
     git pull
