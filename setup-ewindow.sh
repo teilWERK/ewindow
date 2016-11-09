@@ -18,6 +18,7 @@ sudo apt-get install -y \
 	daemontools-run \
 	gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
 	gstreamer1.0-omx \
+	gstreamer1.0-alsa \
 	socat
 
 sudo ln -s /home/ewindow /etc/service/
