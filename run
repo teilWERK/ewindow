@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# To be called from /etc/service/ewindow/run
-# Stuff to execute on boot by root user
+# To be called from /etc/service/ewindow/run Stuff to execute on boot by root user
+
+modprobe bcm2835_v4l2
 
 # Prepare TAP device to run peervpn as user
 ip tuntap add dev ewindow0 mode tap user ewindow
