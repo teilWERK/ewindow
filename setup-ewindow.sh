@@ -1,5 +1,11 @@
 #!/bin/sh
-\
+
+if [ $(whoami) -eq "root" ]; then
+  echo Am Root
+fi
+
+exit 23
+
 systemctl set-default multi-user.target
 ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
 sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin@.service
@@ -7,12 +13,12 @@ sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin
 # Replace pi with ewindow user
 
 useradd -G video,audio -s /home/ewindow/login.sh ewindow
-sudo git clone https://github.com/strfry/ewindow /home/ewindow
-sudo chown -R ewindow:ewindow /home/ewindow/
+git clone https://github.com/strfry/ewindow /home/ewindow
+chown -R ewindow:ewindow /home/ewindow/
 
 
-sudo apt-get update
-sudo apt-get install -y \
+apt-get update
+apt-get install -y \
 	git \
 	dialog \
 	daemontools-run \
@@ -22,4 +28,4 @@ sudo apt-get install -y \
 	socat \
 	dhcpcd5
 
-sudo ln -s /home/ewindow /etc/service/
+ln -s /home/ewindow /etc/service/
