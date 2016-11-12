@@ -43,6 +43,7 @@ function do_id() {
   echo $IP > config/ip
 }
 
+set +e
 case $CHOICE in
   WiFi)
     do_wifi
@@ -59,3 +60,5 @@ case $CHOICE in
     exit 23
     ;;
 esac
+
+read
