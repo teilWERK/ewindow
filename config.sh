@@ -10,6 +10,7 @@ CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	"Description" "Change long description of this EWindow instance" \
 	"WiFi" "Enter Network Configuration" \
 	"Update" "Pull the newest version of this Software" \
+	"OS Shell" "Start a Command Line Prompt" \
 	3>&1 1>&2 2>&3 )
 
 
@@ -57,6 +58,9 @@ case $CHOICE in
     ;;
   Update)
     git pull
+    ;;
+  OS*)
+    bash
     ;;
   *)
 
