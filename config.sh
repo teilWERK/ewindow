@@ -30,6 +30,7 @@ function do_wifi() {
 
   wpa_cli select_network $NETWORK_ID
   wpa_cli save_config
+  wpa_cli reconf
 
   #echo -e "network={\n" "$SSID_LINE" "\n" "$PSK_LINE" "\n}"
   # TODO: Write it somewhere relevant
