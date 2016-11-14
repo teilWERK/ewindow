@@ -16,7 +16,6 @@ useradd -G video,audio,netdev -s /home/ewindow/login.sh ewindow
 git clone https://github.com/strfry/ewindow /home/ewindow
 chown -R ewindow:ewindow /home/ewindow/
 
-
 apt-get update
 apt-get install -y \
 	git \
