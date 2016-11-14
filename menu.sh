@@ -9,6 +9,7 @@ CHOICE=$(dialog --menu menutext 20 100 10 \
 	Config "Enter Configuration Menu" \
 	Preview "Show Local Camera Stream" \
 	Call "Holzwerkstatt" \
+	Shell "OS Shell" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
 
@@ -24,9 +25,12 @@ case $CHOICE in
 		svc -d service/recv service/send
 		;;
 	Call*)
-		ssh 10.7.7.93 CALL
+		ssh 10.7.7.55 CALL
 		svc -d recv send
 		exit
+		;;
+	Shell)
+		bash
 		;;
 	*)
 		exit
