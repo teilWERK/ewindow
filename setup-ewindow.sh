@@ -6,7 +6,7 @@ sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin
 
 # Replace pi with ewindow user
 
-useradd -G video,audio -s /home/ewindow/login.sh ewindow
+useradd -G video,audio,netdev -s /home/ewindow/login.sh ewindow
 sudo git clone https://github.com/strfry/ewindow /home/ewindow
 sudo chown -R ewindow:ewindow /home/ewindow/
 
