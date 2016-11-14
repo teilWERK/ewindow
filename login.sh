@@ -24,6 +24,10 @@ if [ -n "$SSH_CLIENT" ]; then
       svc -d -u send recv
       exit 0
       ;;
+    SEND)
+      export HOST=$(cat hosts.exil)
+      exec ./send.sh $HOST
+      ;;
     *)
       echo Unknown Command, exiting
       exit 1
