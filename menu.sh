@@ -9,6 +9,7 @@ CHOICE=$(dialog --menu menutext 20 100 10 \
 	Config "Enter Configuration Menu" \
 	Preview "Show Local Camera Stream" \
 	Call "Jonathan" \
+	Shell "OS Shell" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
 
@@ -29,6 +30,9 @@ case $CHOICE in
 		dialog --msgbox "Calling..." 20 10
 		svc -d service/send service/recv
 		exit
+		;;
+	Shell)
+		bash
 		;;
 	*)
 		exit

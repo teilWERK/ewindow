@@ -10,6 +10,7 @@ CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	"Description" "Change long description of this EWindow instance" \
 	"WiFi" "Enter Network Configuration" \
 	"Update" "Pull the newest version of this Software" \
+	"OS Shell" "Start a Command Line Prompt" \
 	3>&1 1>&2 2>&3 )
 
 
@@ -32,6 +33,10 @@ function do_wifi() {
   wpa_cli save_config
   wpa_cli reconf
 
+  sleep 2
+
+  wpa_cli stat
+
   #echo -e "network={\n" "$SSID_LINE" "\n" "$PSK_LINE" "\n}"
   # TODO: Write it somewhere relevant
 }
@@ -53,6 +58,9 @@ case $CHOICE in
     ;;
   Update)
     git pull
+    ;;
+  OS*)
+    bash
     ;;
   *)
 
