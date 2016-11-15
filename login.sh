@@ -12,7 +12,7 @@ if [ -n "$SSH_CLIENT" ]; then
       # Asking for permission, to break the current call would happen here
 #      ssh $REMOTE_IP ACCEPT
       echo "Connection Accepted"
-      echo $REMOTE_IP > service/send/host
+      echo $REMOTE_IP > send/host
       svc -du send recv
       #Doesnt work in SSH script dialog --msgbox "Starting call..." 20 100
       echo "Starting video stream: Press ENTER to exit"
