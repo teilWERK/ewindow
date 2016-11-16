@@ -1,3 +1,0 @@
-#!/bin/sh
-
-socat TCP-LISTEN:2222 EXEC:./signalling.sh
