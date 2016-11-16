@@ -6,6 +6,8 @@ cd "$(dirname $0)"
 
 modprobe bcm2835_v4l2
 
+./service/peervpn/iproute2
+
 # Prepare TAP device to run peervpn as user
 #HOSTNAME=ewindow-$(cat /home/ewindow/config/id)
 #hostname $HOSTNAME
