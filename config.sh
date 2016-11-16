@@ -26,11 +26,15 @@ function do_hostname() {
 #  if [[ -f config/hostname ]]; then
 #    echo hostname configured
 #  else
-    HOSTNAME=$(whiptail --inputbox "Please enter the new hostname (with .ewindow.org)" 10 60 "$(<config/hostname)" \
+    HOSTNAME=$(whiptail --inputbox "Please enter the new hostname (with .ewindow.org)" 10 60 "$(hostname)" \
 	3>&1 1>&2 2>&3 )
+    if [ ! "$HOSTNAME" ]; then
+      echo No hostname specified
+      exit 23
+    fi
     hostname "$HOSTNAME"
     echo -e "::1\t$HOSTNAME" >> /etc/hosts
-    echo "$HOSTNAME" > config/hostname
+    echo "$HOSTNAME" > /etc/hostname
 #  fi
 }
 
