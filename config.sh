@@ -4,14 +4,35 @@ DIALOG=whiptail
 
 mkdir -p config
 
-CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
+if [ $1 ]; then
+  CHOICE="$1"
+else
+  CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	20 100 10 \
-	"ID" "Enter E-Window Number" \
+	"Hostname" "Set E-Window Hostname" \
 	"Description" "Change long description of this EWindow instance" \
 	"WiFi" "Enter Network Configuration" \
 	"Update" "Pull the newest version of this Software" \
 	"OS Shell" "Start a Command Line Prompt" \
 	3>&1 1>&2 2>&3 )
+fi
+
+function do_hostname() {
+  if [ $(whoami) != "root" ]; then
+    dialog --msgbox "This needs to be run as root. Exiting" 10 40
+    exit 23
+  fi
+
+#  if [[ -f config/hostname ]]; then
+#    echo hostname configured
+#  else
+    HOSTNAME=$(whiptail --inputbox "Please enter the new hostname (with .ewindow.org)" 10 60 "$(<config/hostname)" \
+	3>&1 1>&2 2>&3 )
+    hostname "$HOSTNAME"
+    echo -e "::1\t$HOSTNAME" >> /etc/hosts
+    echo "$HOSTNAME" > config/hostname
+#  fi
+}
 
 
 function do_wifi() {
@@ -53,8 +74,8 @@ case $CHOICE in
   WiFi)
     do_wifi
     ;;
-  ID)
-    do_id
+  Hostname)
+    do_hostname
     ;;
   Update)
     git pull
