@@ -18,7 +18,20 @@ Easy Alternative: Get https://etcher.io/
 * Make sure SD Card is selected
  * Flash!
 
+Passwort: ewindow/ewindow
 
+# Installation / First Bootup
+
+* Boot the Pi with the flashed SD card
+* A Dialog should appear, asking for hostname: Enter xxx.ewindow.org
+* v0.1 Image has a bug: Enter OS Shell to fix it:
+** su
+** chown -R ewindow:ewindow .
+** exit
+* Select Preview and test camera view
+* Call someone, like fablab-munich-ewindow.org
+** Enter the password of remote ewindow user. (Default: ewindow)
+** Now wait for connection, press enter to hang up
 
 
 #Architecture
