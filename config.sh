@@ -75,6 +75,9 @@ function do_id() {
 
 set +e
 case $CHOICE in
+  Hostname)
+    do_hostname
+    ;;
   WiFi)
     do_wifi
     ;;
@@ -83,6 +86,8 @@ case $CHOICE in
     ;;
   Update)
     git pull
+    echo "Press ENTER to continue"
+    read
     ;;
   OS*)
     bash
@@ -94,4 +99,3 @@ case $CHOICE in
     ;;
 esac
 
-read
