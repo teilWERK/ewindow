@@ -34,6 +34,10 @@ case $CHOICE in
 		svc -d service/send service/recv
 		exit
 		;;
+	Info)
+		V6ADDR=fde1:c0fe::`sed 's/.//3;s/.//8;s/.//13;' /sys/class/net/eth0/address`/64
+		dialog --msgbox "IPv6 VPN Address: $V6ADDR" 20 40
+		;;
 	Shell)
 		bash
 		;;

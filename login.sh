@@ -36,6 +36,10 @@ if [ -n "$SSH_CLIENT" ]; then
       ;;
   esac
 else
-  exec ./menu.sh
+  if [ $(hostname) = "raspberrypi" ]; then
+    exec su -c "./config.sh Hostname"
+  else
+    exec ./menu.sh
+  fi
 fi
 

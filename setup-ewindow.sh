@@ -1,10 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ $(whoami) -eq "root" ]; then
+if [ $(whoami) == "root" ]; then
   echo Am Root
 fi
-
-exit 23
 
 systemctl set-default multi-user.target
 ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
