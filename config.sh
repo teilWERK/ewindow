@@ -6,7 +6,7 @@ mkdir -p config
 
 CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	20 100 10 \
-	"ID" "Enter E-Window Number" \
+	"Hostname" "Enter assigned .ewindow.org name" \
 	"Description" "Change long description of this EWindow instance" \
 	"WiFi" "Enter Network Configuration" \
 	"Update" "Pull the newest version of this Software" \
@@ -50,6 +50,9 @@ function do_id() {
 
 set +e
 case $CHOICE in
+  Hostname)
+    do_hostname
+    ;;
   WiFi)
     do_wifi
     ;;
@@ -58,6 +61,8 @@ case $CHOICE in
     ;;
   Update)
     git pull
+    echo "Press ENTER to continue"
+    read
     ;;
   OS*)
     bash
@@ -69,4 +74,3 @@ case $CHOICE in
     ;;
 esac
 
-read

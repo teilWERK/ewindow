@@ -37,6 +37,9 @@ case $CHOICE in
 	Shell)
 		bash
 		;;
+	Info)
+		./info.sh
+		;;
 	*)
 		exit
 		;;
