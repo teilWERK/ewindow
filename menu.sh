@@ -3,7 +3,7 @@
 cd $(dirname $0) # Change working directory
 
 # Stop Services, in case the previous dialog exited in error while displaying
-svc -d service/recv service/send
+#svc -d service/recv service/send
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	Info "Display debug information" \
