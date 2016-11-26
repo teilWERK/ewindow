@@ -16,7 +16,7 @@ if [ -n "$SSH_CLIENT" ]; then
       svc -du send recv
       #Doesnt work in SSH script dialog --msgbox "Starting call..." 20 100
       echo "Starting video stream: Press ENTER to exit"
-      read N
+      read
       svc -d send recv
       exit 0
       ;;

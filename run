@@ -22,4 +22,3 @@ chown -R ewindow:ewindow .
 sh -c "TERM=linux setterm -blank 0 >/dev/tty0"
 
 exec su ewindow -s /bin/sh -c "svscan ./service"
-
