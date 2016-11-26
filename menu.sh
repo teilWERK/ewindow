@@ -16,7 +16,7 @@ CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 
 case $CHOICE in
 	Config)
-		./config.sh
+		./menu.config.sh
 		;;
 	Preview*)
 		echo localhost > service/send/host
