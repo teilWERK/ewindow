@@ -1,0 +1,15 @@
+#!/bin/sh
+
+. /etc/rc.subr
+
+name="peervpn"
+rcvar=peervpn_enable
+
+command="/usr/sbin/daemon"
+procname="peervpn"
+peervpn_flags="-t $procname /usr/local/sbin/peervpn /usr/local/etc/peervpn-ewindow.conf"
+
+load_rc_config $name
+ : ${peervpn_enable:=no}
+
+run_rc_command "$1"
