@@ -9,12 +9,14 @@ poll_method		kqueue		# poll, select, kqueue ..
 
 # SIP
 sip_trans_bsize		128
-sip_listen		[fde1:c0fe::]:5060
+sip_listen		10.7.7.7:5060
 #sip_certificate	cert.pem
 
 # Audio
+audio_source        gst,http://relay.slayradio.org:8000/
+
 audio_player		oss,/dev/dsp
-audio_source		oss,/dev/dsp
+#audio_source		oss,/dev/dsp
 audio_alert		oss,/dev/dsp
 audio_srate		8000-48000
 audio_channels		1-2
@@ -35,13 +37,13 @@ rtp_tos			184
 rtp_ports		10000-20000
 rtp_bandwidth		512-1024 # [kbit/s]
 rtcp_enable		yes
-rtcp_mux		no
+rtcp_mux		yes
 jitter_buffer_delay	5-10		# frames
 rtp_stats		yes
 
 # Network
 #dns_server		10.0.0.1:53
-#net_interface		wlan0
+net_interface		tap0
 
 # BFCP
 #bfcp_proto		udp
@@ -55,6 +57,7 @@ module_path		/usr/local/lib/baresip/modules
 module			stdio.so
 module			cons.so
 #module			evdev.so
+module			httpd.so
 
 # Audio codec Modules (in order)
 module			opus.so
@@ -72,12 +75,14 @@ module			g711.so
 
 # Audio filter Modules (in encoding order)
 module			vumeter.so
+#module			sndfile.so
 #module			speex_aec.so
 #module			speex_pp.so
 #module			plc.so
 
 # Audio driver Modules
 module			oss.so
+#module			portaudio.so
 #module			aubridge.so
 
 # Video codec Modules (in order)
@@ -88,22 +93,24 @@ module			vp8.so
 #module			selfview.so
 
 # Video source modules
+#module			v4l.so
 module			v4l2.so
 #module			x11grab.so
+#module			cairo.so
 
 # Video display modules
 #module			x11.so
 module			sdl2.so
 
 # Audio/Video source modules
-#module			rst.so	# Play Local MP3's
-#module			gst.so
+#module			rst.so
+module			gst.so
 
 # Media NAT modules
 module			stun.so
 module			turn.so
 module			ice.so
-#module			natpmp.so	# Configurable??
+#module			natpmp.so
 
 # Media encryption modules
 module			srtp.so
@@ -159,6 +166,6 @@ video_selfview		window # {window,pip}
 
 # ICE
 ice_turn		no
-ice_debug		no
+ice_debug		yes
 ice_nomination		regular	# {regular,aggressive}
 ice_mode		full	# {full,lite}
