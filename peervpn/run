@@ -1,3 +1,4 @@
 #!/bin/sh
 
-exec ./peervpn peervpn-ewindow.conf
+. ./iproute2
+exec peervpn peervpn-ewindow.conf

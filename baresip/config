@@ -5,19 +5,22 @@
 #------------------------------------------------------------------------------
 
 # Core
-poll_method		kqueue		# poll, select, kqueue ..
+#poll_method		kqueue		# poll, select, kqueue ..
 
 # SIP
 sip_trans_bsize		128
-sip_listen		10.7.7.7:5060
+sip_listen		0.0.0.0:5060
 #sip_certificate	cert.pem
 
 # Audio
-audio_source        gst,http://relay.slayradio.org:8000/
+#audio_source        gst,http://relay.slayradio.org:8000/
+
 
 audio_player		oss,/dev/dsp
-#audio_source		oss,/dev/dsp
-audio_alert		oss,/dev/dsp
+audio_source		oss,/dev/dsp1
+#audio_player		alsa,hw:0
+#audio_source		alsa,plughw:1
+#audio_alert		oss,/dev/dsp
 audio_srate		8000-48000
 audio_channels		1-2
 #ausrc_srate		48000
@@ -42,7 +45,7 @@ jitter_buffer_delay	5-10		# frames
 rtp_stats		yes
 
 # Network
-#dns_server		10.0.0.1:53
+dns_server		4.2.2.2:53
 net_interface		tap0
 
 # BFCP
@@ -51,7 +54,8 @@ net_interface		tap0
 #------------------------------------------------------------------------------
 # Modules
 
-module_path		/usr/local/lib/baresip/modules
+#module_path		/usr/local/lib/baresip/modules
+module_path		/home/pi/baresip
 
 # UI Modules
 module			stdio.so
@@ -81,6 +85,7 @@ module			vumeter.so
 #module			plc.so
 
 # Audio driver Modules
+module			alsa.so
 module			oss.so
 #module			portaudio.so
 #module			aubridge.so

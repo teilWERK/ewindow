@@ -31,9 +31,7 @@
 #
 #<sip:strfry:strfry@strfry.org>
 #<sip:ewindow.org>
-<sip:202:xxx@exit>;transport=tls;regint=0;rtpkeep=rtcp;
-#mediaenc=srtp;medianat=ice;
-#audio_codecs=opus/48000/2;
-#stunserver=stun:exe
-#video_codecs=vp8
 
+#<sip:estar:christusrettet@sip2sip.info>
+
+<sip:202:xxx@raspberry>;regint=0;

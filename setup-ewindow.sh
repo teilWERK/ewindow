@@ -2,6 +2,9 @@
 
 if [ $(whoami) == "root" ]; then
   echo Am Root
+else
+  echo Not Root, stopping...
+  exit 23
 fi
 
 systemctl set-default multi-user.target
@@ -19,10 +22,5 @@ apt-get install -y \
 	git \
 	dialog \
 	daemontools-run \
-	gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
-	gstreamer1.0-omx \
-	gstreamer1.0-alsa \
-	socat \
-	dhcpcd5
 
-ln -s /home/ewindow /etc/service/
+ln -s /home/ewindow/peervpn/ /etc/service/
