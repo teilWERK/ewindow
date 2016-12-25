@@ -6,12 +6,12 @@ cd $(dirname $0) # Change working directory
 #svc -d service/recv service/send
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
-	Info "Display debug information" \
-	Preview "Show Local Camera Stream" \
-	Audioloop "Echo test for local audio stuff" \
 	Open "Open the Window (await a Call)" \
 	Call "Someone" \
+	Videoloop "Preview Local Camera" \
+	Audioloop "Hear Local Microphone (Echo)" \
 	Shell "OS Shell" \
+	Info "Display debug information" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
 

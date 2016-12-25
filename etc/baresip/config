@@ -16,7 +16,7 @@ sip_listen		0.0.0.0:5060
 #audio_source        gst,http://relay.slayradio.org:8000/
 
 
-audio_player		oss,/dev/dsp1
+audio_player		oss,/dev/dsp2
 audio_source		oss,/dev/dsp1
 #audio_player		alsa,hw:0
 #audio_source		alsa,plughw:1
@@ -32,15 +32,15 @@ audio_channels		1-2
 video_source		v4l2,/dev/video0
 video_display		sdl2
 video_size		640x480
-#video_bitrate		500000
+video_bitrate		500000
 video_fps		15
 
 # AVT - Audio/Video Transport
 rtp_tos			184
 rtp_ports		10000-20000
-rtp_bandwidth		512-1024 # [kbit/s]
+rtp_bandwidth		64-512 # [kbit/s]
 rtcp_enable		yes
-rtcp_mux		yes
+rtcp_mux		no
 jitter_buffer_delay	5-10		# frames
 rtp_stats		yes
 
