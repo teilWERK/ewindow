@@ -1,8 +1,6 @@
 .baresip
 .bash_history
 .cache
+.nano_history
 
-supervise
-*/*/supervise
 
-service/send/host
