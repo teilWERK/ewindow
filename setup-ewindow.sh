@@ -24,3 +24,9 @@ apt-get install -y \
 	daemontools-run \
 
 ln -s /home/ewindow/peervpn/ /etc/service/
+cp etc/motd /etc/motd
+
+
+# Things to do as user
+# cd /home/ewindow
+# ln -s etc/baresip .baresip

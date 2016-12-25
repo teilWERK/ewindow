@@ -8,10 +8,10 @@ cd $(dirname $0) # Change working directory
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	Info "Display debug information" \
 	Preview "Show Local Camera Stream" \
+	Audioloop "Echo test for local audio stuff" \
+	Open "Open the Window (await a Call)" \
 	Call "Someone" \
 	Shell "OS Shell" \
-	Config "Enter Configuration Menu" \
-	Update "git pull" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
 
@@ -20,19 +20,20 @@ case $CHOICE in
 		./menu.config.sh
 		;;
 	Preview*)
-		echo localhost > service/send/host
-		svc -d -u service/send service/recv
+		baresip -e /vidloop 2>/dev/null 1>/dev/null &
 		dialog --msgbox "Started Camera Preview..." 20 100
-		svc -d service/recv service/send
+		killall baresip
+		;;
+	Audioloop*)
+		baresip -e /auloop 2>/dev/null 1>/dev/null &
+		dialog --msgbox "Started Audioloop. Press OK to exit..." 20 100
+		killall baresip
+		;;
+	Open)
+		baresip -6
 		;;
 	Call*)
-#		cat hosts.exil > service/send/host
-		dialog --inputbox "Enter hostname of remote ewindow: " 20 40 "$(<service/send/host)" 2> service/send/host
-		svc -du service/send service/recv
-		ssh $(<service/send/host) CALL
-		#RPC: dialog --msgbox "Calling..." 20 10
-		svc -d service/send service/recv
-		exit
+		. ./call.sh
 		;;
 	Update)
 		git pull

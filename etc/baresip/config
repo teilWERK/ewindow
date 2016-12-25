@@ -16,7 +16,7 @@ sip_listen		0.0.0.0:5060
 #audio_source        gst,http://relay.slayradio.org:8000/
 
 
-audio_player		oss,/dev/dsp
+audio_player		oss,/dev/dsp1
 audio_source		oss,/dev/dsp1
 #audio_player		alsa,hw:0
 #audio_source		alsa,plughw:1
@@ -105,7 +105,8 @@ module			v4l2.so
 
 # Video display modules
 #module			x11.so
-module			sdl2.so
+#module			sdl2.so
+module			omx.so
 
 # Audio/Video source modules
 #module			rst.so
