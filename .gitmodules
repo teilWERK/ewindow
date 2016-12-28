@@ -1,3 +1,12 @@
 [submodule "baresip"]
 	path = baresip
 	url = https://github.com/eleKtronicwindow/baresip
+[submodule "peervpn/peervpn"]
+	path = peervpn/peervpn
+	url = https://github.com/peervpn/peervpn
+[submodule "re"]
+	path = re
+	url = https://github.com/creytiv/re
+[submodule "rem"]
+	path = rem
+	url = https://github.com/creytiv/rem

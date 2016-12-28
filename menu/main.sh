@@ -25,9 +25,8 @@ case $CHOICE in
 		killall baresip
 		;;
 	Audioloop*)
-		baresip -e /auloop 2>/dev/null 1>/dev/null &
-		dialog --msgbox "Started Audioloop. Press OK to exit..." 20 100
-		killall baresip
+		dialog --msgbox "Started Audioloop. Press Ctrl-C to exit..." 20 100
+		baresip -e /auloop # 2>/dev/null 1>/dev/null &
 		;;
 	Open)
 		baresip -6
