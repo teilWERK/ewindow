@@ -12,6 +12,7 @@ CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	Audioloop "Hear Local Microphone (Echo)" \
 	Shell "OS Shell" \
 	Info "Display debug information" \
+	Shutdown "poweroff" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
 
@@ -45,6 +46,9 @@ case $CHOICE in
 		;;
 	Info)
 		./info.sh
+		;;
+	Shutdown)
+		poweroff
 		;;
 	*)
 		exit
