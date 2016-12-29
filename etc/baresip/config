@@ -16,11 +16,11 @@ sip_listen		[::]:5060
 #audio_source        gst,http://relay.slayradio.org:8000/
 
 
-audio_player		oss,/dev/dsp1
-audio_source		oss,/dev/dsp1
-#audio_player		alsa,hw:0
-#audio_source		alsa,plughw:1
-#audio_alert		oss,/dev/dsp
+#audio_player		oss,/dev/dsp2
+#audio_source		oss,/dev/dsp1
+audio_player		alsa,plughw:1
+audio_source		alsa,plughw:1
+#audio_alert		oss,/dev/dsp2
 audio_srate		8000-48000
 audio_channels		1-2
 #ausrc_srate		48000
@@ -30,7 +30,7 @@ audio_channels		1-2
 
 # Video
 video_source		v4l2,/dev/video0
-video_display		omx
+video_display		omx,nil
 video_size		640x480
 video_bitrate		500000
 video_fps		15
@@ -40,7 +40,7 @@ rtp_tos			184
 rtp_ports		10000-20000
 rtp_bandwidth		64-512 # [kbit/s]
 rtcp_enable		yes
-rtcp_mux		yes
+rtcp_mux		no
 jitter_buffer_delay	5-10		# frames
 rtp_stats		yes
 
@@ -54,7 +54,7 @@ net_interface		tap0
 #------------------------------------------------------------------------------
 # Modules
 
-module_path		/usr/local/lib/baresip/modules
+module_path		/home/ewindow/baresip
 
 # UI Modules
 module			stdio.so

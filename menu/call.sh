@@ -7,9 +7,11 @@ cd $(dirname $0) # Change working directory
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	zockers.ewindow.org	"Call Zockers E-window" \
-	exe.ewindow.org		"RosenWerk Dresden" \
+	dresden.ewindow.org	"RosenWerk Dresden" \
 	mumalab.ewindow.org	 "Munich Maker Lab" \
-	exit.ewindow.org	"Jonathan's Laptop" \
+	fablab-munich.ewindow.org	"FabLab Munich" \
+	exit.ewindow.org	"strfry's Laptop" \
+	exodus.strfry.org	"Gateway (not Available)" \
 	Type			"Enter a Hostname" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
