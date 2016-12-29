@@ -30,7 +30,7 @@ audio_channels		1-2
 
 # Video
 video_source		v4l2,/dev/video0
-video_display		omx,nil
+video_display		omx
 video_size		640x480
 video_bitrate		500000
 video_fps		15

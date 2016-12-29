@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-cd $(dirname $0) # Change working directory
+cd $PWD
 
 # Stop Services, in case the previous dialog exited in error while displaying
 #svc -d service/recv service/send
@@ -21,7 +21,8 @@ case $CHOICE in
 		./menu.config.sh
 		;;
 	Preview*)
-		baresip -e /vidloop 2>/dev/null 1>/dev/null &
+		baresip -e /vidloop
+# 2>/dev/null 1>/dev/null &
 		dialog --msgbox "Started Camera Preview..." 20 100
 		killall baresip
 		;;
@@ -33,7 +34,7 @@ case $CHOICE in
 		baresip -6
 		;;
 	Call*)
-		. ./call.sh
+		. menu/call.sh
 		;;
 	Update)
 		git pull
@@ -45,7 +46,7 @@ case $CHOICE in
 		bash
 		;;
 	Info)
-		./info.sh
+		. menu/info.sh
 		;;
 	Shutdown)
 		poweroff

@@ -11,9 +11,9 @@ CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	mumalab.ewindow.org	 "Munich Maker Lab" \
 	fablab-munich.ewindow.org	"FabLab Munich" \
 	exodus.strfry.org	"Gateway (not Available)" \
-#	zockers.ewindow.org	"Call Zockers E-window" \
 	Exit "" \
 	3>&1 1>&2 2>&3 )
+#	zockers.ewindow.org	"Call Zockers E-window" \
 
 
 case $CHOICE in
