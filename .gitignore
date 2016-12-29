@@ -10,3 +10,5 @@ stuff
 
 etc/service
 etc/baresip/config
+
+./.*history
