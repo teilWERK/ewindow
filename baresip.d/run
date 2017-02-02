@@ -1,0 +1,6 @@
+#!/bin/sh
+
+chmod 777 /dev/vc*
+chmod 777 /dev/video*
+
+exec setuidgid ewindow baresip -6 -f $PWD
