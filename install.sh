@@ -8,7 +8,7 @@ vcdbg version
 set +x
 
 # Baresip Dependency
-#apt-get install -y libasound-dev libvpx-dev
+#apt-get install -y libasound-dev libvpx-dev libopus-dev
 #apt-get update
 #apt-get install -y libssl-dev git
 

@@ -7,6 +7,7 @@ cd $PWD
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	Open "Open the Window (await a Call)" \
+	Kill "Stop all baresip instances" \
 	Call "Someone" \
 	Videoloop "Preview Local Camera" \
 	Audioloop "Hear Local Microphone (Echo)" \
@@ -20,10 +21,12 @@ case $CHOICE in
 	Config)
 		./menu.config.sh
 		;;
-	Preview*)
+	Videoloop*)
 		baresip -e /vidloop
 # 2>/dev/null 1>/dev/null &
 		dialog --msgbox "Started Camera Preview..." 20 100
+		;;
+	Kill*)
 		killall baresip
 		;;
 	Audioloop*)
@@ -49,7 +52,8 @@ case $CHOICE in
 		. menu/info.sh
 		;;
 	Shutdown)
-		poweroff
+		#poweroff
+		reboot
 		;;
 	*)
 		exit
