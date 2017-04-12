@@ -1,9 +1,0 @@
-PeerVPN Setup
-=============
-
-
-https://peervpn.net
-fetch https://peervpn.net/files/peervpn-0-044.tar.gz
-tar xzf peervpn-0-044.tar.gz
-cd peervpn && make; cd ..
-cp peervpn-0-044/peervpn . 
