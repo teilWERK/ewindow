@@ -30,3 +30,11 @@ cp etc/motd /etc/motd
 # Things to do as user
 # cd /home/ewindow
 # ln -s etc/baresip .baresip
+# User stuff
+#useradd ewindow -s /home/ewindow/login.sh -m -G audio,video
+#gpasswd -a ewindow audio
+
+
+# Bootup/Run stuff
+#modprobe snd-pcm-oss
+
