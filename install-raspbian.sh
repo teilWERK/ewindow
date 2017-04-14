@@ -1,12 +1,13 @@
 #!/bin/sh
 
-# Baresip Dependency
-apt-get update
-apt-get install -y libasound-dev libvpx-dev libopus-dev
-apt-get install -y libssl-dev git
+set -e
 
+# Baresip Dependencies, starting from raspbian lite
+#apt-get update
+apt-get install -y git
+apt-get install -y libssl-dev libasound-dev libvpx-dev libopus-dev
 
-set -x
+git submodule update --init
 
 cd peervpn && make && make install && cd ..
 cd re && make -j4 && make install && cd ..

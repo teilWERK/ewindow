@@ -7,3 +7,6 @@
 [submodule "re"]
 	path = re
 	url = https://github.com/creytiv/re.git
+[submodule "peervpn"]
+	path = peervpn
+	url = https://github.com/peervpn/peervpn
