@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# baresip daemontools run file
+
+exec baresip -6 -vvv -f .

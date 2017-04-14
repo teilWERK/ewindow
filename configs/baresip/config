@@ -2,10 +2,6 @@
 # baresip configuration
 #
 
-module omx.so
-
-#------------------------------------------------------------------------------
-
 # Core
 poll_method		select		# poll, select, epoll ..
 
@@ -22,9 +18,9 @@ call_max_calls	4
 #audio_path		/usr/local/share/baresip
 #audio_player	oss,/dev/dsp2
 #audio_source	oss,/dev/dsp
-audio_player		alsa,plughw:2
-audio_source		alsa,plughw:1
-audio_alert		alsa,plughw:2
+audio_player		alsa,default
+audio_source		alsa,default
+audio_alert		alsa,default
 audio_rate		8000-48000
 audio_channels		1-2
 ausrc_srate		8000-48000
@@ -122,6 +118,7 @@ module			v4l2.so
 #module			vidbridge.so
 
 # Video display modules
+module			omx.so
 #module			directfb.so
 #module			x11.so
 #module			sdl2.so
