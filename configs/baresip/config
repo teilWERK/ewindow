@@ -7,7 +7,7 @@ poll_method		select		# poll, select, epoll ..
 
 # SIP
 #sip_trans_bsize		128
-sip_listen		[::]:5060
+sip_listen		0.0.0.0:5060
 #sip_certificate	cert.pem
 
 # Call
@@ -31,8 +31,8 @@ ausrc_channels		1
 # Video
 video_source		v4l2,/dev/video0
 video_display		omx,nil
-#video_size		640x480
-video_size		1280x720
+video_size		640x480
+#video_size		1280x720
 video_bitrate		500000
 video_fps		25
 

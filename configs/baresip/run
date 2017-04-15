@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd "$(dirname $0)"
+
 # baresip daemontools run file
 
 exec baresip -6 -vvv -f .
