@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
+
+# This script is intended for Raspbian
+# It creates the "ewindow" user with auto-login
 
 if [ $(whoami) == "root" ]; then
   echo Am Root
@@ -17,24 +20,8 @@ useradd -G video,audio,netdev -s /home/ewindow/login.sh ewindow
 git clone https://github.com/strfry/ewindow /home/ewindow
 chown -R ewindow:ewindow /home/ewindow/
 
-apt-get update
-apt-get install -y \
-	git \
-	dialog \
-	daemontools-run \
-
-ln -s /home/ewindow/peervpn/ /etc/service/
+ln -s /home/ewindow/configs/peervpn /etc/service/
+ln -s /home/ewindow/configs/baresip /etc/service/
 cp etc/motd /etc/motd
 
-
-# Things to do as user
-# cd /home/ewindow
-# ln -s etc/baresip .baresip
-# User stuff
-#useradd ewindow -s /home/ewindow/login.sh -m -G audio,video
-#gpasswd -a ewindow audio
-
-
-# Bootup/Run stuff
-#modprobe snd-pcm-oss
-
+apt-get install daemontools-run
