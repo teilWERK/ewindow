@@ -8,13 +8,14 @@ then
   "$0"
 else
   echo $(hostname).ewindow.org configured, proceeding with update:
-  git stash
+#  git stash
   git pull -r origin master
-  if [ ! $? ] ; then
+  if [ 0 != $? ] ; then
     echo Error?
     bash
   else
-    git stash pop
+#    git stash pop
+	echo Success!
   fi
 
   ./menu.sh
