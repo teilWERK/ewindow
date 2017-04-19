@@ -2,7 +2,6 @@
 
 V6ADDR=fde1:c0fe::`sed 's/.//3;s/.//8;s/.//13;' /sys/class/net/eth0/address`/64
 ip link set dev eth0 up
-ip link set dev wlan0 up
 ip tuntap add dev tap0 mode tap
 ip link set dev tap0 up
 ip -6 addr add ${V6ADDR} dev tap0

@@ -21,11 +21,11 @@ sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin
 useradd -G video,audio,netdev,sudo -s /home/ewindow/login.sh ewindow
 ln -s "$PWD"/curses-ui /home/ewindow
 chown -R ewindow:ewindow /home/ewindow/
-echo -en "ewindow\newindow" | passwd ewindow
+echo Setting ewindow user password to 'ewindow'
+echo -en "ewindow\newindow" | passwd ewindow 2>/dev/null
 
 # Set up daemontools autorun:
 
 ln -sf "$PWD"/configs/peervpn /etc/service/
 ln -sf "$PWD"/configs/baresip /etc/service/
 cp configs/etc/motd /etc/motd
-
