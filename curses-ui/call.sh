@@ -6,6 +6,7 @@ cd $(dirname $0) # Change working directory
 #svc -d service/recv service/send
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
+	ewindow@exit.ewindow.org "Strfry's exit node" \
 	lorenza@debianwindow.ewindow.org "Lorenzas Laptop-Window" \
 	strfry@exit.ewindow.org	"strfry's Laptop" \
 	ewindow@dresden.ewindow.org	"RosenWerk Dresden" \

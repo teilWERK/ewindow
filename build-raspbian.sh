@@ -2,9 +2,20 @@
 
 cd "$(dirname $0)"
 
-set -e # TODO: Properly check for root?
+# TODO: Allow for build without installation
 
-git submodule update --init
+if [ $(whoami) == "root" ]; then
+else
+  echo Not Root, stopping...
+  exit 23
+fi
+
+mkdir -p src
+cd src
+
+# Install PeerVPN
+git clone https://github.com/peervpn/peervpn
+cd peervpn && make && make install && cd ..
 
 # Baresip Dependencies, starting from raspbian lite
 apt-get update
@@ -15,7 +26,6 @@ git clone https://github.com/eleKtronicwindow/baresip
 git clone https://github.com/creytiv/re
 git clone https://github.com/creytiv/rem
 
-cd peervpn && make && make install && cd ..
 cd re && make -j4 && make install && cd ..
 cd rem && make -j4 && make install && cd ..
 
