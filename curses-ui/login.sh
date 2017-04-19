@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 cd $(dirname $0) # Change working directory
 
@@ -7,10 +7,10 @@ then
   exec sudo ./config.sh
   "$0"
 else
-  echo ewindow configured
+  echo $(hostname).ewindow.org configured, proceeding with update:
   git stash
   git pull -r origin master
-  if [ $? ] ; then
+  if [ ! $? ] ; then
     echo Error?
     bash
   else
