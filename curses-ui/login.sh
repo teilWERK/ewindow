@@ -8,10 +8,13 @@ then
   "$0"
 else
   echo ewindow configured
+  git stash
   git pull -r origin master
   if [ $? ] ; then
-    echo -en Error?
-    read
+    echo Error?
+    bash
+  else
+    git stash pop
   fi
 
   ./menu.sh
