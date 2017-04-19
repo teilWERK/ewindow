@@ -10,18 +10,27 @@ else
   exit 23
 fi
 
+cd "$(dirname $0)"
+
 systemctl set-default multi-user.target
 ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+
+# Setup EWindow autologin curses-UI
+
+apt install -y dialog
+
 sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin@.service
 
-# Replace pi with ewindow user
-
-useradd -G video,audio,netdev -s /home/ewindow/login.sh ewindow
-git clone https://github.com/strfry/ewindow /home/ewindow
+useradd -G video,audio,netdev,sudo -s /home/ewindow/curses-ui/login.sh ewindow
+ln -s "$PWD" /home/ewindow
 chown -R ewindow:ewindow /home/ewindow/
+echo -en "ewindow\newindow" | passwd ewindow
 
-ln -s /home/ewindow/configs/peervpn /etc/service/
-ln -s /home/ewindow/configs/baresip /etc/service/
-cp etc/motd /etc/motd
+# Set up daemontools autorun:
 
-apt-get install daemontools-run
+apt install -y daemontools-run
+
+ln -sf "$PWD"/configs/peervpn /etc/service/
+ln -sf "$PWD"/configs/baresip /etc/service/
+cp configs/etc/motd /etc/motd
+

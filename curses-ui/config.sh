@@ -1,8 +1,6 @@
 #!/bin/bash -ex
 
-DIALOG=whiptail
-
-mkdir -p config
+DIALOG=dialog
 
 if [ $1 ]; then
   CHOICE="$1"
@@ -10,12 +8,12 @@ else
   CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	20 100 10 \
 	"Hostname" "Set E-Window Hostname" \
-	"Description" "Change long description of this EWindow instance" \
 	"WiFi" "Enter Network Configuration" \
-	"Update" "Pull the newest version of this Software" \
-	"OS Shell" "Start a Command Line Prompt" \
 	3>&1 1>&2 2>&3 )
 fi
+
+#	"Description" "Change long description of this EWindow instance" \
+
 
 function do_hostname() {
   if [ $(whoami) != "root" ]; then
@@ -23,10 +21,7 @@ function do_hostname() {
     exit 23
   fi
 
-#  if [[ -f config/hostname ]]; then
-#    echo hostname configured
-#  else
-    HOSTNAME=$(whiptail --inputbox "Please enter the new hostname (with .ewindow.org)" 10 60 "$(hostname)" \
+    HOSTNAME=$(dialog --inputbox "Please enter the new hostname (will appear under  XXX.ewindow.org)" 10 60 "$(hostname)" \
 	3>&1 1>&2 2>&3 )
     if [ ! "$HOSTNAME" ]; then
       echo No hostname specified
@@ -35,6 +30,8 @@ function do_hostname() {
     hostname "$HOSTNAME"
     echo -e "::1\t$HOSTNAME" >> /etc/hosts
     echo "$HOSTNAME" > /etc/hostname
+
+    touch configured
 #  fi
 }
 
@@ -77,6 +74,7 @@ set +e
 case $CHOICE in
   Hostname)
     do_hostname
+    ./config.sh
     ;;
   WiFi)
     do_wifi

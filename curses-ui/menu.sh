@@ -6,7 +6,6 @@ cd $PWD
 #svc -d service/recv service/send
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
-	Kill "Stop all baresip instances" \
 	Call "Someone" \
 	Videoloop "Preview Local Camera" \
 	Audioloop "Hear Local Microphone (Echo)" \
@@ -17,6 +16,7 @@ CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	3>&1 1>&2 2>&3 )
 
 #	Open "Open the Window (await a Call)" \
+#	Kill "Stop all baresip instances" \
 
 
 case $CHOICE in
@@ -27,7 +27,7 @@ case $CHOICE in
 		echo "/vidloop" | nc localhost 5555
 		dialog --msgbox "Started Camera Preview..." 20 100
 		echo "/vidloop_stop" | nc localhost 5555
-		exec ./main.sh
+		exec ./menu.sh
 		;;
 	Kill*)
 		killall baresip
@@ -37,7 +37,7 @@ case $CHOICE in
 		baresip -e /auloop # 2>/dev/null 1>/dev/null &
 		;;
 	Call*)
-		. menu/call.sh
+		. call.sh
 		;;
 	Update)
 		git pull
