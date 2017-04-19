@@ -8,6 +8,12 @@ then
   "$0"
 else
   echo ewindow configured
+  git pull -r origin master
+  if [ $? ] ; then
+    echo -en Error?
+    read
+  fi
+
   ./menu.sh
 fi
 
