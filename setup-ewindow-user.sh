@@ -20,18 +20,20 @@ systemctl set-default multi-user.target
 ln -sf /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
 sed -i -e "s/--autologin pi/--autologin ewindow/g" /etc/systemd/system/autologin@.service
 
-useradd -G video,audio,netdev,sudo,pi -s $ETPATH/curses-ui/login.sh -m ewindow
-ln -s "$PWD"/curses-ui /home/ewindow
+useradd -G video,audio,netdev,sudo,pi -s $EPATH/curses-ui/login.sh -m ewindow
 
 # Fix up permissions...
 chown -R ewindow:ewindow $EPATH
 chmod -R g+rwX $EPATH
 
+# Add pi user to ewindow group, for editing convenience...
+gpasswd -a pi ewindow
 
 echo Setting ewindow user password to 'ewindow'
 echo -en "ewindow\newindow" | passwd ewindow 2>&1 > /dev/null
 
 echo Set up daemontools autorun:
+mkdir -p /etc/service
 set -x
 ln -sf "$PWD"/configs/peervpn /etc/service/
 ln -sf "$PWD"/configs/baresip /etc/service/
