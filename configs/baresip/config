@@ -47,7 +47,7 @@ rtp_stats		yes
 #rtp_timeout		60
 
 # Network
-dns_server		4.2.2.2:53
+dns_server              10.23.42.1:53
 net_interface		tap0
 
 # BFCP
