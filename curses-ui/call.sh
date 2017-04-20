@@ -7,7 +7,7 @@ cd $(dirname $0) # Change working directory
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	exit.ewindow.org "Strfry's exit node" \
 	testvm.ewindow.org "Build Virtual Machine" \
-	dresden.ewindow.org "RosenWERK Window"
+	dresden.ewindow.org "RosenWERK Window"	\
 	Exit "" \
 	3>&1 1>&2 2>&3 )
 #	zockers.ewindow.org	"Call Zockers E-window" \

@@ -35,4 +35,7 @@ echo Set up daemontools autorun:
 set -x
 ln -sf "$PWD"/configs/peervpn /etc/service/
 ln -sf "$PWD"/configs/baresip /etc/service/
+
+
 cp configs/etc/motd /etc/motd
+cp configs/etc/asound.conf /etc/asound.conf

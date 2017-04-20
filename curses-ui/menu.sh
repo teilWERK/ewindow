@@ -37,7 +37,7 @@ case $CHOICE in
 		baresip -e /auloop # 2>/dev/null 1>/dev/null &
 		;;
 	Call*)
-		. call.sh
+		. ./call.sh
 		;;
 	Update)
 		git pull
