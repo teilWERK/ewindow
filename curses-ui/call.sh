@@ -6,6 +6,8 @@ cd $(dirname $0) # Change working directory
 
 CHOICE=$(dialog --menu "$(hostname)" 20 100 10 \
 	exit.ewindow.org "Strfry's exit node" \
+	twBox.ewindow.org "teilWERK Box" \
+	c3d2.ewindow.org "Hackspace MiniWindow" \
 	testvm.ewindow.org "Build Virtual Machine" \
 	dresden.ewindow.org "RosenWERK Window"	\
 	Exit "" \
