@@ -21,5 +21,11 @@ else
   ./menu.sh
 fi
 
+git status
+if [ $? ]; then
+  echo git unclean??
+  set -x
+  bash
+fi
 #exec ./menu/main.sh
 
