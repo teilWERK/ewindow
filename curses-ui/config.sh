@@ -8,7 +8,8 @@ else
   CHOICE=$(whiptail --menu "EWindow Configuration Menu" \
 	20 100 10 \
 	"Hostname" "Set E-Window Hostname" \
-	"WiFi" "Enter Network Configuration" \
+	"WiFi" "Enter WiFi Login Dates" \
+	"Finish" "Exit Configuration Mode" \
 	3>&1 1>&2 2>&3 )
 fi
 
@@ -31,7 +32,6 @@ function do_hostname() {
     echo -e "::1\t$HOSTNAME" >> /etc/hosts
     echo "$HOSTNAME" > /etc/hostname
 
-    touch configured
 #  fi
 }
 
@@ -82,10 +82,8 @@ case $CHOICE in
   Hostname)
     do_hostname
     ;;
-  Update)
-    git pull
-    echo "Press ENTER to continue"
-    read
+  Finish)
+    touch configured
     ;;
   OS*)
     bash
