@@ -52,8 +52,7 @@ case $CHOICE in
 		. menu/info.sh
 		;;
 	Shutdown)
-		#poweroff
-		reboot
+		sudo shutdown
 		;;
 	*)
 		exit
