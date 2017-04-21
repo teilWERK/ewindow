@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname $0)"
+
 if [ ! -e configured ] ;
 then
   sudo ./config.sh
@@ -7,7 +9,6 @@ then
   #echo Window Configuration Finished. Press ENTER to reboot
 fi
 
-else
   echo $(hostname).ewindow.org configured, proceeding with update:
   git pull -r origin master
   if [ 0 != $? ] ; then
@@ -19,8 +20,7 @@ else
 	echo Success!
   fi
 
-  ./menu.sh
-fi
+  . ./menu.sh
 
 git status
 if [ $? ]; then
