@@ -24,7 +24,7 @@ case $CHOICE in
 	*)
 		clear
 		#baresip -6 -v -e d"$CHOICE"
-		echo "dewindow@$CHOICE" | nc localhost 5555
+		echo "dewindow@$CHOICE" | nc -q -1 localhost 5555
 		;;
 esac
 
