@@ -24,7 +24,10 @@ case $CHOICE in
 	*)
 		clear
 		#baresip -6 -v -e d"$CHOICE"
-		echo "dewindow@$CHOICE" | nc -q -1 localhost 5555
+		echo "dewindow@$CHOICE" | nc -q -1 localhost 5555 >&2 &
+		dialog --msgbox "Press Enter to abort calll..." 20 100
+		sudo killall baresip
+		sleep 2 && ./menu.sh
 		;;
 esac
 
