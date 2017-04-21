@@ -31,6 +31,7 @@ gpasswd -a pi ewindow
 
 echo Setting ewindow user password to 'ewindow'
 echo -en "ewindow\newindow" | passwd ewindow 2>&1 > /dev/null
+ewindow ALL=(ALL) NOPASSWD: ALL >> /etc/sudoers.d/010_pi-nopasswd
 
 echo Set up daemontools autorun:
 mkdir -p /etc/service
