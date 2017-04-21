@@ -1,25 +1,32 @@
 #!/bin/bash
 
-cd $(dirname $0) # Change working directory
+cd "$(dirname $0)"
 
-if [ ! -e configured ]
+if [ ! -e configured ] ;
 then
-  exec sudo ./config.sh
+  sudo ./config.sh
   "$0"
-else
+  #echo Window Configuration Finished. Press ENTER to reboot
+fi
+
   echo $(hostname).ewindow.org configured, proceeding with update:
-#  git stash
   git pull -r origin master
   if [ 0 != $? ] ; then
-    echo Error?
+# should be a while loop?
+    echo Something went wrong while pulling updates
+    echo Please clean up your local git repository
     bash
   else
-#    git stash pop
 	echo Success!
   fi
 
-  ./menu.sh
-fi
+  . ./menu.sh
 
+git status
+if [ $? ]; then
+  echo git unclean??
+  set -x
+  bash
+fi
 #exec ./menu/main.sh
 
