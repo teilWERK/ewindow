@@ -3,4 +3,7 @@
 cd "$(dirname $0)"
 
 . ./iproute2
+
+#mkfifo peervpn.fifo
 exec peervpn peervpn-ewindow.conf
+#< peervpn.fifo
