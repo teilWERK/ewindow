@@ -31,8 +31,8 @@ ausrc_channels		1
 # Video
 video_source		v4l2,/dev/video0
 video_display		omx,nil
-video_size		640x480
-#video_size		1280x720
+#video_size		640x480
+video_size		1280x720
 video_bitrate		500000
 video_fps		25
 
@@ -98,7 +98,7 @@ module			alsa.so
 #module			aufile.so
 
 # Video codec Modules (in order)
-#module			avcodec.so
+module			avcodec.so
 module			vp8.so
 #module			vp9.so
 #module			h265.so
@@ -127,7 +127,7 @@ module			omx.so
 # Audio/Video source modules
 #module			rst.so
 #module			gst1.so
-#module			gst_video1.so
+module			gst_video1.so
 
 # Media NAT modules
 module			stun.so
