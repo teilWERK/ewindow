@@ -1,6 +1,6 @@
 # Check dependencies?
 
-all: libbaresip.so peervpn
+all:
 
 libbaresip.so: baresip re rem re/libre.a rem/librem.a
 	make -C baresip libbaresip.so STATIC=1 LIBRE_SO=../re
@@ -22,3 +22,9 @@ rem/librem.a:
 peervpn peervpn/peervpn:
 	git clone https://github.com/peervpn/peervpn
 	make -C peervpn
+
+install: baresip
+	make STATIC=1 -C baresip install-shared
+
+clean:
+	rm -rf re rem baresip peervpn
