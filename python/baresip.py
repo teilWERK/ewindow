@@ -57,11 +57,25 @@ class SIP_ADDR(Structure):
 				("params", PL)
 	]
 
+class TMR(Structure):
+	_fields_ = [("le", LE),
+				("tmr_h", c_void_p),
+				("arg", c_void_p),
+				("jfs", c_uint64)]
+
+tmr_h = CFUNCTYPE(None, c_void_p)
 signal_h = CFUNCTYPE(None, c_int)
 ua_event_h = CFUNCTYPE(None, c_void_p, c_int, c_void_p, c_char_p, c_void_p)
 
 def create_wrapper():
 	bs = cdll.LoadLibrary('libbaresip.so')
+
+	# libre
+
+	bs.tmr_init.argtypes = [POINTER(TMR)]
+	bs.tmr_start.argtypes = [POINTER(TMR), c_uint64, tmr_h, c_void_p]
+
+	# libbaresip
 
 	bs.conf_config.restype = c_void_p
 	bs.uag_current.restype = c_void_p
@@ -80,6 +94,12 @@ def create_wrapper():
 
 	bs.contact_addr.argtypes = [c_void_p]
 	bs.contact_addr.restype = POINTER(SIP_ADDR)
+
+	bs.call_peername.argtypes = [c_void_p]
+	bs.call_peername.restype = c_char_p
+	
+	bs.call_peeruri.argtypes = [c_void_p]
+	bs.call_peeruri.restype = c_char_p
 
 	bs.ua_presence_status_set.argtypes = [c_void_p, c_int]
 
@@ -101,7 +121,7 @@ os.environ["PULSE_PROP"] = "filter.want=echo-cancel"
 
 bs = create_wrapper()
 bs.libre_init()
-bs.conf_path_set("/home/strfry/.ewindow")
+bs.conf_path_set("/etc/ewindow")
 bs.conf_configure()
 bs.log_enable_debug(True)
 
@@ -134,13 +154,11 @@ def list_contacts():
 		presence = bs.contact_presence(c)
 		#print a.contents.dname, uri, presence
 		ret += [(a.contents.dname, uri, presence)]
-		
 		h = cast(h.contents.next, POINTER(LE))
 
-	for x, y, z in ret: print x, y, z
+	#for x, y, z in ret: print x, y, z
 
 	return ret
-
 
 class ConnectionManager(object):
 	def __init__(self):
@@ -155,8 +173,12 @@ class ConnectionManager(object):
 
 	@staticmethod
 	def uag_callback(ua, event, call, prm, arg):
+		print arg
+		print cast(arg, POINTER(py_object))
+		print cast(arg, POINTER(py_object)).contents
 		self = cast(arg, POINTER(py_object)).contents.value
 		print "ConnectionManager: ", ua, event, call, prm
+		print "call peeruri/name", bs.call_peeruri(call), bs.call_peername(call)
 
 		event = UA_EVENT(event)
 
@@ -175,11 +197,17 @@ class ConnectionManager(object):
 				self.current_connection = None
 			set_presence_status(PRESENCE_STATUS.PRESENCE_OPEN)
 		elif event == UA_EVENT.UA_EVENT_CALL_INCOMING:
-			print "Incoming call"
 			if self.current_connection:
-				# TODO: do not deny if call comes from current connection 
-				# Present GUI
-				bs.ua_hangup(ua, call, 0, "Busy")
+				if (bs.call_peeruri(call) == call.current_connection[1]):
+					if (bs.call_localuri(call) < bs.call_peeruri(call)):
+						bs.ua_hold_answer(ua, call)
+						print "Accepting call from our target"
+						# TODO: Hangup our outgoing call
+					else:
+						bs.ua_hangup(ua, call, 0, "Don't call us we call you")
+				else:
+					print "Rejecting call from", bs.call_peeruri(call)
+					bs.ua_hangup(ua, call, 0, "Busy")
 			else:
 				bs.ua_hold_answer(ua, call)
 		else :
@@ -218,7 +246,25 @@ def set_presence_status(status):
 import thread
 import time
 
+timer = TMR()
+bs.tmr_init(pointer(timer))
+timerh = None
+
+bs.contact_add.argtypes = [c_void_p, c_void_p, POINTER(PL)]
+bs.contact_find.argtypes = [c_void_p, c_char_p]
+bs.contact_remove.argtypes = [c_void_p, c_void_p]
+
 connman = ConnectionManager()
+
+def timer_callback(arg):
+	bs.tmr_start(pointer(timer), 1000, timerh, 0x1337)
+	connman.manage()
+
+timerh = tmr_h(timer_callback)
+#timer_callback(0)
+
+signalh = signal_h(signal_handler)
+bs.re_main(signalh)
 
 th = thread.start_new_thread (bs.re_main, (signal_h(signal_handler),))
 while True:
