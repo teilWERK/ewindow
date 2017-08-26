@@ -5,12 +5,13 @@ After=network.target
 Wants=
 
 [Service]
-#EnvironmentFile=/etc/sysconfig/sshd
-#ExecStart=/usr/local/bin/ewindow
-ExecStart=/usr/bin/python /home/lorenza/ewindow/python/baresip.py
-#ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/ewindow
 KillMode=process
 Restart=on-failure
-RestartSec=42s
+RestartSec=23s
 Environment=SYSTEMD_LOG_LEVEL=debug
-User=lorenza
+User=ewindow
+
+[Install]
+WantedBy=multi-user.target
+
