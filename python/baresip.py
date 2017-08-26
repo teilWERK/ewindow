@@ -81,6 +81,9 @@ def create_wrapper():
 	bs.uag_current.restype = c_void_p
 	bs.baresip_contacts.restype = c_void_p
 
+	bs.uag_event_register.argtypes = [c_void_p, c_void_p]
+	bs.uag_event_register.restype = c_int
+
 	bs.contact_list.restype = c_void_p
 	bs.contact_list.argtypes = [c_void_p]
 
@@ -164,10 +167,11 @@ class ConnectionManager(object):
 	def __init__(self):
 		self.current_connection = None
 
-		# some ctypes magic to wrap self into void* arg
-		arg = cast(pointer(py_object(self)), POINTER(py_object))
 		self._py_callback = ua_event_h(self.uag_callback)
-		bs.uag_event_register(self._py_callback, arg)
+		# some ctypes magic to wrap self into void* arg
+		self._py_arg = cast(pointer(py_object(self)), POINTER(py_object))
+		
+		bs.uag_event_register(self._py_callback, self._py_arg)
 
 		set_presence_status(PRESENCE_STATUS.PRESENCE_OPEN)
 
@@ -198,7 +202,7 @@ class ConnectionManager(object):
 			set_presence_status(PRESENCE_STATUS.PRESENCE_OPEN)
 		elif event == UA_EVENT.UA_EVENT_CALL_INCOMING:
 			if self.current_connection:
-				if (bs.call_peeruri(call) == call.current_connection[1]):
+				if (bs.call_peeruri(call) == self.current_connection[1]):
 					if (bs.call_localuri(call) < bs.call_peeruri(call)):
 						bs.ua_hold_answer(ua, call)
 						print "Accepting call from our target"
@@ -214,6 +218,7 @@ class ConnectionManager(object):
 			print "Unknown Event!!!", event
 
 	def manage(self):
+		print "ConnMan.manage"
 		if self.current_connection:
 			return
 		# Poll connections
@@ -261,14 +266,14 @@ def timer_callback(arg):
 	connman.manage()
 
 timerh = tmr_h(timer_callback)
-#timer_callback(0)
+timer_callback(0)
 
 signalh = signal_h(signal_handler)
 bs.re_main(signalh)
 
 th = thread.start_new_thread (bs.re_main, (signal_h(signal_handler),))
-while True:
-	time.sleep(1)
-	connman.manage()
+#while True:
+#	time.sleep(1)
+#	connman.manage()
 	#for d, u, s in list_contacts():
 	#	print d, s
