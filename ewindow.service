@@ -1,0 +1,16 @@
+[Unit]
+Description=EWindow Autoconnect script
+Documentation=
+After=network.target
+Wants=
+
+[Service]
+#EnvironmentFile=/etc/sysconfig/sshd
+#ExecStart=/usr/local/bin/ewindow
+ExecStart=/usr/bin/python /home/lorenza/ewindow/python/baresip.py
+#ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+Environment=SYSTEMD_LOG_LEVEL=debug
+User=lorenza
