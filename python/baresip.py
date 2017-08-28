@@ -105,6 +105,9 @@ def create_wrapper():
 	
 	bs.call_peeruri.argtypes = [c_void_p]
 	bs.call_peeruri.restype = c_char_p
+	
+	bs.call_localuri.argtypes = [c_void_p]
+	bs.call_localuri.restype = c_char_p
 
 	bs.ua_presence_status_set.argtypes = [c_void_p, c_int]
 
@@ -194,12 +197,8 @@ class ConnectionManager(object):
 
 	@staticmethod
 	def uag_callback(ua, event, call, prm, arg):
-		print arg
-		print cast(arg, POINTER(py_object))
-		print cast(arg, POINTER(py_object)).contents
 		self = cast(arg, POINTER(py_object)).contents.value
 		print "ConnectionManager: ", ua, event, call, prm
-		print "call peeruri/name", bs.call_peeruri(call), bs.call_peername(call)
 
 		event = UA_EVENT(event)
 
@@ -218,6 +217,7 @@ class ConnectionManager(object):
 				self.current_connection = None
 			set_presence_status(PRESENCE_STATUS.PRESENCE_OPEN)
 		elif event == UA_EVENT.UA_EVENT_CALL_INCOMING:
+			print "Incoming call handler: Us: {} Them: {}".format(bs.call_localuri(call), bs.call_peeruri(call))
 			if self.current_connection:
 				if (bs.call_peeruri(call) == self.current_connection[1]):
 					if (bs.call_localuri(call) < bs.call_peeruri(call)):
@@ -226,6 +226,7 @@ class ConnectionManager(object):
 						# TODO: Hangup our outgoing call
 					else:
 						bs.ua_hangup(ua, call, 0, "Don't call us we call you")
+						print "Rejecting call from our target, we wait for answer"
 				else:
 					print "Rejecting call from", bs.call_peeruri(call)
 					bs.ua_hangup(ua, call, 0, "Busy")
