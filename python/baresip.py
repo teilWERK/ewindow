@@ -147,6 +147,9 @@ if ret:
 	
 bs.conf_modules()
 
+# Load tty vumeter only in interactive console:
+if sys.stdout.isatty():
+	bs.module_load("vumeter")
 
 def signal_handler(signal):
 	print "Signal: ", signal
