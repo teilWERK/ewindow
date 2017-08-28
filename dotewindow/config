@@ -56,7 +56,7 @@ module			g711.so
 #module			l16.so
 
 # Audio filter Modules (in encoding order)
-module			vumeter.so
+#module			vumeter.so
 
 # Audio driver Modules
 module			alsa.so
