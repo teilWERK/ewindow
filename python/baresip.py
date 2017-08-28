@@ -130,7 +130,11 @@ bs.log_enable_debug(True)
 
 prefer_ipv6 = True
 bs.baresip_init(bs.conf_config(), prefer_ipv6)
-bs.ua_init("EWindow", True, True, True, prefer_ipv6)
+ret = bs.ua_init("EWindow", True, True, True, prefer_ipv6)
+if ret:
+	print "Error in ua_init(), exiting..."
+	exit(ret)
+	
 bs.conf_modules()
 
 
