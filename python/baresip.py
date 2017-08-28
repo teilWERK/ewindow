@@ -108,6 +108,9 @@ def create_wrapper():
 	
 	bs.call_localuri.argtypes = [c_void_p]
 	bs.call_localuri.restype = c_char_p
+	
+	bs.ua_aor.argtypes = [c_void_p]
+	bs.ua_aor.restype = c_char_p
 
 	bs.ua_presence_status_set.argtypes = [c_void_p, c_int]
 
@@ -117,6 +120,7 @@ def create_wrapper():
 	bs.notifier_update_status.argtype = [c_void_p]
 
 	bs.log_enable_debug.argtype = [c_bool]
+	bs.log_enable_info.argtype = [c_bool]
 
 	return bs
 
@@ -124,6 +128,9 @@ def create_wrapper():
 ## Request Echo Cancellation for Pulseaudio:
 import os
 os.environ["PULSE_PROP"] = "filter.want=echo-cancel"
+
+# Set X11 Display variable in case it's not set
+if "DISPLAY" not in os.environ: os.environ["DISPLAY"] = ":0"
 
 ## START
 
@@ -140,6 +147,11 @@ optlist, args = getopt(sys.argv[1:], "v")
 if ('-v', '') in optlist:
 	print "Enabling Debug Log"
 	bs.log_enable_debug(True)
+	bs.log_enable_info(True)
+else:
+	bs.log_enable_debug(False)
+	bs.log_enable_info(False)
+	
 
 prefer_ipv6 = True
 bs.baresip_init(bs.conf_config(), prefer_ipv6)
@@ -198,9 +210,9 @@ class ConnectionManager(object):
 	@staticmethod
 	def uag_callback(ua, event, call, prm, arg):
 		self = cast(arg, POINTER(py_object)).contents.value
-		print "ConnectionManager: ", ua, event, call, prm
-
 		event = UA_EVENT(event)
+		
+		print "ConnectionManager: ", ua, event, call, prm
 
 		if event == UA_EVENT.UA_EVENT_CALL_ESTABLISHED:
 			print "Call established"
@@ -217,10 +229,13 @@ class ConnectionManager(object):
 				self.current_connection = None
 			set_presence_status(PRESENCE_STATUS.PRESENCE_OPEN)
 		elif event == UA_EVENT.UA_EVENT_CALL_INCOMING:
-			print "Incoming call handler: Us: {} Them: {}".format(bs.call_localuri(call), bs.call_peeruri(call))
+			us = bs.ua_aor(bs.uag_current())
+			them = bs.call_peeruri(call)
+			print "Incoming call handler: Us: {} Them: {}".format(us, them)
 			if self.current_connection:
-				if (bs.call_peeruri(call) == self.current_connection[1]):
-					if (bs.call_localuri(call) < bs.call_peeruri(call)):
+				if (them == self.current_connection[1]):
+					if (us < them):
+						self.current_connection = (them, them)
 						bs.ua_hold_answer(ua, call)
 						print "Accepting call from our target"
 						# TODO: Hangup our outgoing call
@@ -229,14 +244,14 @@ class ConnectionManager(object):
 						print "Rejecting call from our target, we wait for answer"
 				else:
 					print "Rejecting call from", bs.call_peeruri(call)
-					bs.ua_hangup(ua, call, 0, "Busy")
+					bs.ua_hangup(ua, call, 0, "We want to connect to someone else")
 			else:
 				bs.ua_hold_answer(ua, call)
 		else :
 			print "Unknown Event!!!", event
 
 	def manage(self):
-		print "ConnMan.manage"
+		#print "ConnMan.manage"
 		if self.current_connection:
 			return
 		# Poll connections
@@ -273,10 +288,6 @@ timer = TMR()
 bs.tmr_init(pointer(timer))
 timerh = None
 
-bs.contact_add.argtypes = [c_void_p, c_void_p, POINTER(PL)]
-bs.contact_find.argtypes = [c_void_p, c_char_p]
-bs.contact_remove.argtypes = [c_void_p, c_void_p]
-
 connman = ConnectionManager()
 
 def timer_callback(arg):
@@ -289,7 +300,7 @@ timer_callback(0)
 signalh = signal_h(signal_handler)
 bs.re_main(signalh)
 
-th = thread.start_new_thread (bs.re_main, (signal_h(signal_handler),))
+#th = thread.start_new_thread (bs.re_main, (signal_h(signal_handler),))
 #while True:
 #	time.sleep(1)
 #	connman.manage()
