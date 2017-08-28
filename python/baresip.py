@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 ## CTypes libbaresip.so wrapper
 from enum import Enum, IntEnum
 #import ctypes
@@ -126,7 +128,15 @@ bs = create_wrapper()
 bs.libre_init()
 bs.conf_path_set("/etc/ewindow")
 bs.conf_configure()
-bs.log_enable_debug(True)
+
+# Parse command line arguments
+import sys
+from getopt import getopt
+
+optlist, args = getopt(sys.argv[1:], "v")
+if ('-v', '') in optlist:
+	print "Enabling Debug Log"
+	bs.log_enable_debug(True)
 
 prefer_ipv6 = True
 bs.baresip_init(bs.conf_config(), prefer_ipv6)
