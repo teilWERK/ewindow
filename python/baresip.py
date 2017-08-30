@@ -247,6 +247,7 @@ class ConnectionManager(object):
 					bs.ua_hangup(ua, call, 0, "We want to connect to someone else")
 			else:
 				bs.ua_hold_answer(ua, call)
+				self.current_connection = (them, them)
 		else :
 			print "Unknown Event!!!", event
 
