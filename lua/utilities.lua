@@ -49,12 +49,14 @@ end
 function M.timer(t, cb, arg)
 	local timer = ffi.new("struct tmr")
 	bs.tmr_init(timer)
-
-	local function loop()
-		bs.tmr_start(timer, t, loop, nil)
+	-- Explicit cast to avoid wrapping every time
+	local loop_cb = nil
+	function loop()
+		bs.tmr_start(timer, t, loop_cb, nil)
 		cb(arg)
 	end
 
+	loop_cb = ffi.cast("tmr_h*", loop)
 	loop(arg)
 	return timer
 end

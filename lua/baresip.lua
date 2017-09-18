@@ -23,17 +23,4 @@ ffi.metatype(PL, {
 	end})
 
 
-function timer(t, cb, arg)
-	local timer = ffi.new("struct tmr")
-	bs.tmr_init(timer)
-
-	local function loop(arg)
-		bs.tmr_start(timer, t, loop, arg)
-		cb(arg)
-	end
-
-	loop(arg)
-	return timer
-end
-
 return ffi.load("baresip")

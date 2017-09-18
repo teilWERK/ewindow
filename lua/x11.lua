@@ -655,8 +655,64 @@ local x11 = {
 	XPeekEvent			=	libx11.XPeekEvent,
 }
 
+local glwindow = {}
 
-function create(self)
+
+local egl = require "egl"
+
+local function egl_init(self)
+	print("egl_init")
+  local CONTEXT = ffi.new('int[3]', {egl.CONTEXT_CLIENT_VERSION, 2,
+                                     egl.NONE})
+  local attrib = ffi.new('int[11]', {egl.RED_SIZE, 8,
+      egl.GREEN_SIZE, 8, egl.BLUE_SIZE, 8, egl.NONE})
+      --egl.ALPHA_SIZE, 8, egl.DEPTH_SIZE, 24, egl.NONE})
+
+  local numConfigs = ffi.new('int[1]')
+  local config = ffi.new('void *[1]')
+  local display = egl.getDisplay(ffi.cast("EGLDisplay",egl.DEFAULT_DISPLAY))
+  assert(display, "eglGetDisplay failed.")
+
+  local major = ffi.new("uint32_t[1]")
+  local minor = ffi.new("uint32_t[1]")
+  local res = egl.initialize(display, major, minor)
+  assert(res ~= 0, "eglInitialize failed.")
+  self.majorVersion = major[0]
+  self.minorVersion = minor[0]
+
+  res = egl.chooseConfig(display, attrib, config, 1, numConfigs)
+  assert(res ~= 0, "eglChooseConfig failed.")
+  local surface = egl.createWindowSurface(display, config[0],
+                  ffi.cast("void*", self.nativewindow), nil)
+
+  assert(surface, "eglCreateWindowSurface failed.")
+
+  local context = egl.createContext(display, config[0], nil, CONTEXT)
+  assert(context, "eglCreateContext failed.")
+
+  res = egl.makeCurrent(display, surface, surface, context)
+  assert(res ~= 0, "eglMakeCurrent failed.")
+
+  self.context = context
+  self.frames = 0
+  self.display = display
+  self.surface = surface
+  return true
+end
+
+function glwindow.make_current(self, attach)
+	ctx = self.context
+	if attach == false then
+		res = egl.makeCurrent(self.display, egl.EGL_NO_SURFACE, egl.EGL_NO_SURFACE, egl.EGL_NO_CONTEXT)
+	else
+		res = egl.makeCurrent(self.display, self.surface, self.surface, self.context)
+	end
+	assert(res ~= 0, "eglMakeCurrent failed.")
+end
+
+
+function glwindow.create_window()
+	self = {}
 	x_display = x11.XOpenDisplay(nil)
 	root = x11.DefaultRootWindow(x_display)
 
@@ -666,7 +722,7 @@ function create(self)
 	win = x11.XCreateWindow(x_display, root, 0, 0,
 	esContext.width, esContext.height, 0,
 	x11.CopyFromParent, x11.InputOutput,
-	nil, x11.CWEventMask,
+	ffi.NULL, x11.CWEventMask,
 	swa)
 
 	s_wmDeleteMessage = x11.XInternAtom(x_display, "WM_DELETE_WINDOW", false)
@@ -701,9 +757,13 @@ function create(self)
 
 	self.nativewindow = win
 	self.nativedisplay = x_display
+
+	egl_init(self)
+	
+	return self
 end
 
-function userInterrupt()
+local function userInterrupt()
 	--while x11.XPending(x_display) ~= 0 do
 	while x11.XPeekEvent(x_display, xev) == 0 do
 		if xev[0].type == x11.KeyPress then
@@ -713,55 +773,9 @@ function userInterrupt()
 	end
 end
 
-
-
-local egl = require "egl"
-
-function egl_init(self)
-	print("egl_init")
-  local CONTEXT = ffi.new('int[3]', {egl.CONTEXT_CLIENT_VERSION, 2,
-                                     egl.NONE})
-  local attrib = ffi.new('int[11]', {egl.RED_SIZE, 8,
-      egl.GREEN_SIZE, 8, egl.BLUE_SIZE, 8, egl.NONE})
-      --egl.ALPHA_SIZE, 8, egl.DEPTH_SIZE, 24, egl.NONE})
-
-  local numConfigs = ffi.new('int[1]')
-  local config = ffi.new('void *[1]')
-  local display = egl.getDisplay(ffi.cast("EGLDisplay",egl.DEFAULT_DISPLAY))
-  assert(display, "eglGetDisplay failed.")
-
-  local major = ffi.new("uint32_t[1]")
-  local minor = ffi.new("uint32_t[1]")
-  local res = egl.initialize(display, major, minor)
-  assert(res ~= 0, "eglInitialize failed.")
-  self.majorVersion = major[0]
-  self.minorVersion = minor[0]
-
-  res = egl.chooseConfig(display, attrib, config, 1, numConfigs)
-  assert(res ~= 0, "eglChooseConfig failed.")
-  local surface = egl.createWindowSurface(display, config[0],
-                  ffi.cast("void*", self.nativewindow), nil)
-
-  assert(surface, "eglCreateWindowSurface failed.")
-
-  local context = egl.createContext(display, config[0], nil, CONTEXT)
-  assert(context, "eglCreateContext failed.")
-
-  res = egl.makeCurrent(display, surface, surface, context)
-  assert(res ~= 0, "eglMakeCurrent failed.")
-
-  self.frames = 0
-  self.display = display
-  self.surface = surface
-  return true
-end
-
-ctx = {}
-
-print("pre-create")
-create(ctx)
-egl_init(ctx)
-while true do
+function glwindow.update(self)
 	userInterrupt()
-	egl.swapBuffers(ctx.display, ctx.surface); 
+	egl.swapBuffers(self.display, self.surface)
 end
+
+return glwindow

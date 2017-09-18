@@ -4,6 +4,11 @@ local utils = require "utilities"
 
 utils.init_baresip("/etc/ewindow", "EWindow Connection Manager")
 
+-- Hack for a baresip internal function
+ffi.cdef[[
+	void notifier_update_status(struct ua*);
+]]
+
 function set_presence_status(status)
 	bs.ua_presence_status_set(bs.uag_current(), status)
 	bs.notifier_update_status(bs.uag_current())
@@ -14,7 +19,7 @@ local ConnectionManager = {
 }
 
 local function ua_event(uav)
-	ffi.new("enum ua_event", "UA_EVENT_CALL_" .. uav)
+	return ffi.new("enum ua_event", "UA_EVENT_CALL_" .. uav)
 end
 
 local events = {
@@ -40,10 +45,10 @@ bs.uag_event_register(
 			print("Call established")
 			set_presence_status(presence.busy)
 			self.current_connection = bs.call_peeruri(call)
-		elseif event == events.close then
+		elseif event == events.closed then
 			print("Call closed, reason: ", prm)
 			-- Re-connect in case of rtp error
-			if prm:find("rtp error") then
+			if string.find(prm, "rtp error") then
 				bs.ua_connect(bs.uag_current(), 0, 0, uri, 0, 1)
 			else
 				self.current_connection = nil
@@ -51,9 +56,9 @@ bs.uag_event_register(
 
 			set_presence_status(presence.open)
 		elseif event == events.incoming then
-			us = bs.ua_aor(bs.uag_current())
-			them = bs.call_peeruri(call)
-			print "Incoming call handler: Us: {} Them: {}".format(us, them)
+			us = tostring(bs.ua_aor(bs.uag_current()))
+			them = tostring(bs.call_peeruri(call))
+			print(string.format("Incoming call handler: Us: %s Them: %s", us, them))
 			if self.current_connection then
 				if them == self.current_connection then
 					if us < them then
@@ -80,10 +85,11 @@ bs.uag_event_register(
 nil)
 
 utils.timer(1000, function(self)
-	print("ConnMan.manage")
 	if self.current_connection then
 		return
 	end
+
+	set_presence_status(presence.open)
 
 	-- Poll connections
 
