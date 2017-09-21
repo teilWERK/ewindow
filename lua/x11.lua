@@ -616,9 +616,6 @@ extern int XMapWindow(
 
 ]]
 
-local esContext = { width = 1024, height = 768
-}
-
 local libx11 = ffi.load("X11")
 
 local x11 = {
@@ -630,6 +627,7 @@ local x11 = {
 	CWOverrideRedirect	= 	bit.lshift(1,9),
 	CWEventMask			= 	bit.lshift(1,11),
 
+	StructureNotifyMask = bit.lshift(1,17),
 	SubstructureNotifyMask = bit.lshift(1,19),
 
 	CopyFromParent		=	0,
@@ -646,6 +644,7 @@ local x11 = {
 	DefaultRootWindow	=	libx11.XDefaultRootWindow,
 	XInternAtom			=	libx11.XInternAtom,
 	XSetWMProtocols		=	libx11.XSetWMProtocols,
+	XSetWMHints			=	libx11.XSetWMHints,
 	XChangeWindowAttributes = libx11.XChangeWindowAttributes,
 	XMapWindow			=	libx11.XMapWindow,
 	XStoreName			=	libx11.XStoreName,
@@ -653,94 +652,44 @@ local x11 = {
 	XPending			=	libx11.XPending,
 	XNextEvent			=	libx11.XNextEvent,
 	XPeekEvent			=	libx11.XPeekEvent,
+	
+	libx11 = libx11 -- Keep a reference around
 }
 
-local glwindow = {}
+local M = {}
+M.__index = M
 
+function M.create_window(width, height)
+	self = setmetatable({}, M)
+	
+	local display = x11.XOpenDisplay(nil)
+	local root = x11.DefaultRootWindow(display)
+	
+	local swa = ffi.new("XSetWindowAttributes", {})
+	swa.event_mask = bit.bor(x11.ExposureMask, x11.KeyPressMask)
+	--, x11.PointerMotionMask, x11.StructureNotifyMask, x11.SubstructureNotifyMask)
 
-local egl = require "egl"
+	local win = x11.XCreateWindow(display, root, 0, 0,
+		width, height, 0, x11.CopyFromParent, x11.InputOutput,
+		ffi.NULL, x11.CWEventMask, swa)
 
-local function egl_init(self)
-	print("egl_init")
-  local CONTEXT = ffi.new('int[3]', {egl.CONTEXT_CLIENT_VERSION, 2,
-                                     egl.NONE})
-  local attrib = ffi.new('int[11]', {egl.RED_SIZE, 8,
-      egl.GREEN_SIZE, 8, egl.BLUE_SIZE, 8, egl.NONE})
-      --egl.ALPHA_SIZE, 8, egl.DEPTH_SIZE, 24, egl.NONE})
-
-  local numConfigs = ffi.new('int[1]')
-  local config = ffi.new('void *[1]')
-  local display = egl.getDisplay(ffi.cast("EGLDisplay",egl.DEFAULT_DISPLAY))
-  assert(display, "eglGetDisplay failed.")
-
-  local major = ffi.new("uint32_t[1]")
-  local minor = ffi.new("uint32_t[1]")
-  local res = egl.initialize(display, major, minor)
-  assert(res ~= 0, "eglInitialize failed.")
-  self.majorVersion = major[0]
-  self.minorVersion = minor[0]
-
-  res = egl.chooseConfig(display, attrib, config, 1, numConfigs)
-  assert(res ~= 0, "eglChooseConfig failed.")
-  local surface = egl.createWindowSurface(display, config[0],
-                  ffi.cast("void*", self.nativewindow), nil)
-
-  assert(surface, "eglCreateWindowSurface failed.")
-
-  local context = egl.createContext(display, config[0], nil, CONTEXT)
-  assert(context, "eglCreateContext failed.")
-
-  res = egl.makeCurrent(display, surface, surface, context)
-  assert(res ~= 0, "eglMakeCurrent failed.")
-
-  self.context = context
-  self.frames = 0
-  self.display = display
-  self.surface = surface
-  return true
-end
-
-function glwindow.make_current(self, attach)
-	ctx = self.context
-	if attach == false then
-		res = egl.makeCurrent(self.display, egl.EGL_NO_SURFACE, egl.EGL_NO_SURFACE, egl.EGL_NO_CONTEXT)
-	else
-		res = egl.makeCurrent(self.display, self.surface, self.surface, self.context)
-	end
-	assert(res ~= 0, "eglMakeCurrent failed.")
-end
-
-
-function glwindow.create_window()
-	self = {}
-	x_display = x11.XOpenDisplay(nil)
-	root = x11.DefaultRootWindow(x_display)
-
-	swa = ffi.new("XSetWindowAttributes", {})
-	swa.event_mask = bit.bor(x11.ExposureMask, x11.PointerMotionMask, x11.KeyPressMask)
-
-	win = x11.XCreateWindow(x_display, root, 0, 0,
-	esContext.width, esContext.height, 0,
-	x11.CopyFromParent, x11.InputOutput,
-	ffi.NULL, x11.CWEventMask,
-	swa)
-
-	s_wmDeleteMessage = x11.XInternAtom(x_display, "WM_DELETE_WINDOW", false)
+	s_wmDeleteMessage = x11.XInternAtom(display, "WM_DELETE_WINDOW", false)
 	wmd = ffi.new("uint64_t[1]", {s_wmDeleteMessage})
-	x11.XSetWMProtocols(x_display, win, wmd, 1)
+	x11.XSetWMProtocols(display, win, wmd, 1)
 
-	xattr = ffi.new("XSetWindowAttributes[1]", {})
+	local xattr = ffi.new("XSetWindowAttributes[1]", {})
 	xattr[0].override_redirect = false
-	x11.XChangeWindowAttributes(x_display, win, x11.CWOverrideRedirect, xattr)
+	x11.XChangeWindowAttributes(display, win, x11.CWOverrideRedirect, xattr)
 
-	hints = ffi.new("XWMHints", {})
-	hints.input = true
-	hints.flags = x11.InputHint
+	local hints = ffi.new("XWMHints[1]", {})
+	hints[0].input = true
+	hints[0].flags = x11.InputHint
+	x11.XSetWMHints(display, win, hints)
 
-	x11.XMapWindow(x_display, win)
-	x11.XStoreName(x_display, win, "theTitel")
+	x11.XMapWindow(display, win)
+	x11.XStoreName(display, win, "theTitel")
 
-	wm_state = x11.XInternAtom(x_display, "_NET_WM_STATE", false)
+	wm_state = x11.XInternAtom(display, "_NET_WM_STATE", false)
 
 	xev = ffi.new("XEvent[1]", {})
 	xev[0].type	= x11.ClientMessage
@@ -749,33 +698,37 @@ function glwindow.create_window()
 	xev[0].xclient.format       = 32;
 	xev[0].xclient.data.l[0]    = 1;
 	xev[0].xclient.data.l[1]    = false;
-	x11.XSendEvent(x_display,
-	   x11.DefaultRootWindow ( x_display ),
+	ret = x11.XSendEvent(display,
+	   root,
 	   false,
 	   x11.SubstructureNotifyMask,
 	   xev);
 
-	self.nativewindow = win
-	self.nativedisplay = x_display
-
-	egl_init(self)
+	self.x_window = win
+	self.x_display = display
 	
 	return self
 end
 
-local function userInterrupt()
-	--while x11.XPending(x_display) ~= 0 do
-	while x11.XPeekEvent(x_display, xev) == 0 do
+function M.update(self)
+	ret = true
+	
+	xev = ffi.new("XEvent[1]", {})
+	
+	while x11.XPending(self.x_display) > 0 do
+		x11.XNextEvent(self.x_display, xev)
 		if xev[0].type == x11.KeyPress then
 		elseif xev[0].type == x11.ClientMessage then
+			print ("interpreting client message as destroy...")
+			ret = false
 		elseif xev[0].type == x11.DestroyNotify then
+			print ("destroy notify")
+			ret = false
 		end
 	end
+
+	return ret
 end
 
-function glwindow.update(self)
-	userInterrupt()
-	egl.swapBuffers(self.display, self.surface)
-end
-
-return glwindow
+return M
+	

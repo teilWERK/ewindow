@@ -70,7 +70,9 @@ local egl = {
   createContext = libegl.eglCreateContext,
   makeCurrent = libegl.eglMakeCurrent,
   swapBuffers = libegl.eglSwapBuffers,
-  swapInterval = libegl.eglSwapInterval
+  swapInterval = libegl.eglSwapInterval,
+
+  libegl = libegl
 }
 
 return egl

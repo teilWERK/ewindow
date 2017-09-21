@@ -1,7 +1,9 @@
 local M = {}
 
 local ffi = require "ffi"
+local gles2 = require "egl"
 local gles2 = require "gles2"
+local bs = require "baresip"
 
 ffi.cdef[[
 	struct vidisp_st {
@@ -207,8 +209,7 @@ function alloc_handler(vp, vd, prm, dev, resizeh, arg)
 	vp[0].surface = window.surface
 	vp[0].context = window.context
 	vp[0].program = phandle
-	
-	
+
 	return 0
 end
 
@@ -264,6 +265,21 @@ function new_luastate()
 	ffi.gc(cb, function() print ("Warning: Display callback gc'ed") end)
 	
 	return state, cb
+end
+
+function M.register()
+	vidisp = ffi.new("struct vidisp*[1]")
+
+	newstate, display_handler_state = new_luastate()
+	--prevent the new state from being garbage collected
+
+	local dhs = ffi.cast("vidisp_disp_h*", display_handler_state)
+
+	local result = bs.vidisp_register(vidisp,
+		bs.baresip_vidispl(), "qtupload",
+		alloc_handler, update_handler, display_handler_state, nil)
+
+	print("vidisp_register: ", result)
 end
 
 
