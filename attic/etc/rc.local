@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-
-/home/ewindow/service/peervpn/iproute2
-/home/ewindow/service/peervpn/peervpn /home/ewindow/service/peervpn/peervpn-ewindow.conf &
-
-exit 0
