@@ -15,7 +15,9 @@ network_check() {
 
 colorized_status() {
    wait
-   if [[ $(cat $1) ]] ; then
+   
+   #echo $(<$1)
+   if [ "$(cat $1)" = 0 ] ; then
       echo -e "\e[32monline";
    else
       echo -e "\e[31moffline";
@@ -42,11 +44,11 @@ main(){
 
    col_right 
    move_up
-   window "Video Camera" "white" "50%"
+   window "Video Camera" "red" "50%"
    append "Video Devices Available: $(v4l2-ctl --list-devices)"
    endwin
 
-   window "Audio" "foo" "50%"
+   window "Audio" "blue" "50%"
    append "$(arecord -lq | grep -E ^[a-Z*])"
    append "$(aplay   -lq | grep -E ^[a-Z*])"
    endwin
