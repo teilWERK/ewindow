@@ -6,7 +6,6 @@ export LANG=${1:-C.UTF-8}
 #import bashsimplecurses
 source $(dirname $0)/bashsimplecurses/simple_curses.sh
 
-
 network_check() {
     ping -c 1 -W 1 8.8.8.8 > /dev/null 2>&1
     echo $? > /dev/shm/ew-network
@@ -37,7 +36,7 @@ main(){
 
    window "EWindow Status" "green" "50%"
    append "Hostname: $(hostname)"
-   append "IP Address: $(hostname -I)"
+#   append "IP Address: $(hostname -I)"
    append "Internet Connection Status: $(colorized_status /dev/shm/ew-network)"
    append "VPN Connection Status: $(colorized_status /dev/shm/ew-vpn)"
    endwin
@@ -53,8 +52,8 @@ main(){
    endwin
 
    window "Audio" "blue" "50%"
-   append "$(arecord -lq | grep -E ^[a-Z*])"
-   append "$(aplay   -lq | grep -E ^[a-Z*])"
+   append "$(arecord -lq | grep -E ^[a-zA-Z*])"
+   append "$(aplay   -lq | grep -E ^[a-zA-Z*])"
    endwin
 
    # Check for keypress
