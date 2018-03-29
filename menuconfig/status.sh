@@ -17,6 +17,10 @@ network_check() {
     echo $? > /dev/shm/ew-vpn
 }
 
+network_addrs() {
+    echo $(ip addr|grep 'scope global'|grep -E -o 'inet6? [^/]*'|cut '-d ' -f2)
+}
+
 colorized_status() {
    wait
    
@@ -37,7 +41,7 @@ main(){
 
    window "EWindow Status" "green" "50%"
    append "Hostname: $(hostname)"
-   append "IP Address: $(hostname -I)"
+   append "IP Address: $(network_addrs)"
    append "Internet Connection Status: $(colorized_status /dev/shm/ew-network)"
    append "VPN Connection Status: $(colorized_status /dev/shm/ew-vpn)"
    endwin
