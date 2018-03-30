@@ -6,7 +6,11 @@ export LANG=${1:-C.UTF-8}
 #import bashsimplecurses
 source $(dirname $0)/bashsimplecurses/simple_curses.sh
 
+touch /dev/shm/ew-network /dev/shm/ew-vpn
+
 network_check() {
+    wait
+
     ping -c 1 -W 1 8.8.8.8 > /dev/null 2>&1
     echo $? > /dev/shm/ew-network
 
@@ -21,9 +25,6 @@ network_addrs() {
 }
 
 colorized_status() {
-   wait
-   
-   #echo $(<$1)
    if [ "$(cat $1)" = 0 ] ; then
       echo -e "\e[32monline";
    else
@@ -33,9 +34,6 @@ colorized_status() {
 
 #create the main function
 main(){
-   #read a
-   #echo $a
-   
    network_check &
 
    window "EWindow Status" "green" "50%"
@@ -44,7 +42,7 @@ main(){
    append "Internet Connection Status: $(colorized_status /dev/shm/ew-network)"
    append "VPN Connection Status: $(colorized_status /dev/shm/ew-vpn)"
    endwin
-   
+
    window "DNS Configuration" "yellow" "50%"
    append_file "/etc/resolv.conf"
    endwin
@@ -65,5 +63,6 @@ main(){
       exit
    fi
 }
+
 #then ask the standard loop
 main_loop
