@@ -54,8 +54,8 @@ main(){
    endwin
 
    window "Audio" "blue" "50%"
-   append "$(arecord -lq | grep -E ^[a-zA-Z*])"
-   append "$(aplay   -lq | grep -E ^[a-zA-Z*])"
+   append "$(arecord -lq 2>/dev/null | grep -E ^[a-zA-Z*])"
+   append "$(aplay   -lq 2>/dev/null | grep -E ^[a-zA-Z*])"
    endwin
 
    # Check for keypress

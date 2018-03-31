@@ -4,4 +4,4 @@ cd $(dirname $0)
 
 ./status.sh
 
-./ewindowui
+./ewindow
